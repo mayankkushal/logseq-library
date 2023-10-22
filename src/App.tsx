@@ -1,26 +1,34 @@
-import React, { useRef } from "react";
-import { useAppVisible } from "./utils";
+import "@logseq/libs"
+import React, { useEffect, useState } from "react"
+import BookView from "./components/BookView"
+import Header from "./components/Header"
+import { useAppVisible } from "./utils"
 
 function App() {
-  const innerRef = useRef<HTMLDivElement>(null);
-  const visible = useAppVisible();
+  const visible = useAppVisible()
+  const [books, setBooks] = useState<any>([])
+
+  useEffect(() => {
+    getPage()
+  }, [visible])
+
+  const getPage = async () => {
+    const booksResponse = await logseq.DB.q("(page-property :type [[Books]])")
+    console.log("this is page, ", books)
+    setBooks(booksResponse)
+  }
+
   if (visible) {
     return (
-      <main
-        className="backdrop-filter backdrop-blur-md fixed inset-0 flex items-center justify-center"
-        onClick={(e) => {
-          if (!innerRef.current?.contains(e.target as any)) {
-            window.logseq.hideMainUI();
-          }
-        }}
-      >
-        <div ref={innerRef} className="text-size-2em">
-          Welcome to [[Logseq]] Plugins!
+      <>
+        <div className="backdrop-filter backdrop-blur-md fixed inset-0 p-4">
+          <Header />
+          <BookView books={books} />
         </div>
-      </main>
-    );
+      </>
+    )
   }
-  return null;
+  return null
 }
 
-export default App;
+export default App
