@@ -1,8 +1,13 @@
 import "@logseq/libs"
 import React, { useEffect, useState } from "react"
 import BookView from "./components/BookView"
-import Header from "./components/Header"
+import Layout from "./components/Layout"
 import { useAppVisible } from "./utils"
+
+import { library } from "@fortawesome/fontawesome-svg-core"
+import { fas } from "@fortawesome/free-solid-svg-icons"
+
+library.add(fas)
 
 function App() {
   const visible = useAppVisible()
@@ -22,8 +27,15 @@ function App() {
     return (
       <>
         <div className="backdrop-filter backdrop-blur-md fixed inset-0 p-4">
-          <Header />
-          <BookView books={books} />
+          <Layout
+            content={{
+              dashboard: {
+                icon: "home",
+                name: "Dashboard",
+                content: <BookView books={books} />,
+              },
+            }}
+          />
         </div>
       </>
     )
